@@ -1,0 +1,581 @@
+\documentclass[UTF8]{ctexart}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+\ctexset{
+  section = {
+    format = \raggedright\Large\bfseries, % 左对齐 + 字号 + 粗体
+  }
+}
+\begin{document}
+\pagestyle{plain}   % 去掉页眉，只保留页脚页码
+\begin{center}
+  {\LARGE\bfseries 作业五}\\[0.5em]
+\end{center}
+
+\section{Jensen\textendash Shannon 散度与非重叠分布情形}
+
+首先给出 KL 散度与 JS 散度的定义，然后在离散情形下严格推导：
+当数据分布 \(P_{\text{data}}(\mathbf{x})\) 与生成分布 \(P_G(\mathbf{x})\) 的支撑集不重叠时，
+\[
+\mathrm{JSD}\!\bigl(P_{\text{data}}\|\;P_G\bigr)
+\]
+为常数，并写出每一步推导的依据。
+
+\subsection{KL 散度与 JS 散度的定义}
+
+设 \(P(\mathbf{x})\)、\(Q(\mathbf{x})\) 为定义在同一空间 \(\mathcal{X}\) 上的两个概率分布。
+在离散情形下，KL 散度定义为
+\[
+\mathrm{KL}\bigl(P\|Q\bigr)
+= \sum_{\mathbf{x}\in\mathcal{X}}
+  P(\mathbf{x}) \log \frac{P(\mathbf{x})}{Q(\mathbf{x})},
+\]
+其中约定当 \(P(\mathbf{x})=0\) 时，对应项记为 0；若存在某点使得
+\(P(\mathbf{x})>0\) 且 \(Q(\mathbf{x})=0\)，则 KL 散度为 \(+\infty\)。
+
+Jensen\textendash Shannon 散度（JS 散度）定义为
+\[
+\mathrm{JSD}\bigl(P\|Q\bigr)
+= \frac{1}{2}\mathrm{KL}\!\left(P\;\middle\|\;M\right)
++ \frac{1}{2}\mathrm{KL}\!\left(Q\;\middle\|\;M\right),
+\]
+其中
+\[
+M(\mathbf{x}) = \frac{P(\mathbf{x}) + Q(\mathbf{x})}{2}
+\]
+是 \(P\)、\(Q\) 的\textbf{均值分布}。直观上，JS 散度衡量的是
+\(P\) 与 \(Q\) 相对其平均分布 \(M\) 的距离之和。
+
+在本题中，令
+\[
+P_{\text{data}}(\mathbf{x}) := P(\mathbf{x}),\qquad
+P_G(\mathbf{x}) := Q(\mathbf{x}),
+\]
+则题目给出的 JS 散度写法为
+\[
+\mathrm{JSD}\bigl(P_{\text{data}}\|P_G\bigr)
+= \frac{1}{2}
+  \mathrm{KL}\!\left(P_{\text{data}} \Big\| 
+      \frac{P_{\text{data}} + P_G}{2}\right)
++ \frac{1}{2}
+  \mathrm{KL}\!\left(P_G \Big\|
+      \frac{P_{\text{data}} + P_G}{2}\right).
+\]
+
+\subsection{不重叠的精确定义}
+
+设
+\[
+\mathcal{S}_{\text{data}}
+= \{\mathbf{x}\in\mathcal{X}\mid P_{\text{data}}(\mathbf{x})>0\},\qquad
+\mathcal{S}_{G}
+= \{\mathbf{x}\in\mathcal{X}\mid P_G(\mathbf{x})>0\}
+\]
+分别为两分布的支撑集（support）。题目中“\(P_{\text{data}}\) 和 \(P_G\) 不重叠”
+可以形式化为
+\[
+\mathcal{S}_{\text{data}} \cap \mathcal{S}_{G} = \varnothing,
+\]
+即对任意 \(\mathbf{x}\)，至多只有一个分布在该点处的概率质量为正：
+\[
+P_{\text{data}}(\mathbf{x})>0 \ \Rightarrow\ P_G(\mathbf{x})=0;\qquad
+P_G(\mathbf{x})>0 \ \Rightarrow\ P_{\text{data}}(\mathbf{x})=0.
+\]
+
+\subsection{逐步推导：非重叠时 JS 散度为常数}
+
+下面在离散情形下，严格写出每一步计算。
+
+\subsubsection*{步骤 1：写出 JS 的两项 KL}
+
+代入定义，有
+\begin{align}
+\mathrm{JSD}\bigl(P_{\text{data}}\|P_G\bigr)
+&= \frac{1}{2}
+   \sum_{\mathbf{x}}
+   P_{\text{data}}(\mathbf{x})
+   \log \frac{
+         P_{\text{data}}(\mathbf{x})
+   }{
+         M(\mathbf{x})
+   }
+ + \frac{1}{2}
+   \sum_{\mathbf{x}}
+   P_G(\mathbf{x})
+   \log \frac{
+         P_G(\mathbf{x})
+   }{
+         M(\mathbf{x})
+   },
+\label{eq:js-two-kl}
+\end{align}
+其中
+\[
+M(\mathbf{x}) = \frac{P_{\text{data}}(\mathbf{x})+P_G(\mathbf{x})}{2}.
+\]
+
+\subsubsection*{步骤 2：在非重叠假设下化简 \(M(\mathbf{x})\)}
+
+对任意 \(\mathbf{x}\)，只有以下两种可能（忽略同时为 0 的点）：
+
+\begin{enumerate}
+  \item 若 \(\mathbf{x}\in\mathcal{S}_{\text{data}}\)（即 \(P_{\text{data}}(\mathbf{x})>0\)，
+        根据不重叠条件必有 \(P_G(\mathbf{x})=0\)），则
+        \[
+        M(\mathbf{x})
+        = \frac{P_{\text{data}}(\mathbf{x})+0}{2}
+        = \frac{1}{2}P_{\text{data}}(\mathbf{x}).
+        \]
+  \item 若 \(\mathbf{x}\in\mathcal{S}_{G}\)（即 \(P_G(\mathbf{x})>0\)，
+        此时 \(P_{\text{data}}(\mathbf{x})=0\)），则
+        \[
+        M(\mathbf{x})
+        = \frac{0 + P_G(\mathbf{x})}{2}
+        = \frac{1}{2}P_G(\mathbf{x}).
+        \]
+\end{enumerate}
+
+\subsubsection*{步骤 3：化简第一项 KL}
+
+只考虑第一项
+\[
+\frac{1}{2}
+\sum_{\mathbf{x}}
+P_{\text{data}}(\mathbf{x})
+\log \frac{P_{\text{data}}(\mathbf{x})}{M(\mathbf{x})}.
+\]
+
+注意：只有在 \(P_{\text{data}}(\mathbf{x})>0\) 时该项才有贡献，
+因此求和可以限制在 \(\mathcal{S}_{\text{data}}\) 上：
+\[
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x})
+\log \frac{P_{\text{data}}(\mathbf{x})}{M(\mathbf{x})}.
+\]
+
+对 \(\mathbf{x}\in\mathcal{S}_{\text{data}}\)，按上一步有
+\[
+M(\mathbf{x}) = \frac{1}{2}P_{\text{data}}(\mathbf{x}).
+\]
+代入得到
+\begin{align*}
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x})
+\log \frac{P_{\text{data}}(\mathbf{x})}{M(\mathbf{x})}
+&=
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x})
+\log
+\frac{
+P_{\text{data}}(\mathbf{x})
+}{
+\frac{1}{2}P_{\text{data}}(\mathbf{x})
+}
+\\
+&=
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x})
+\log 2.
+\end{align*}
+
+由于 \(\log 2\) 与 \(\mathbf{x}\) 无关，可以提出求和号：
+\[
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x})
+\log 2
+=
+\frac{\log 2}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x}).
+\]
+
+而 \(P_{\text{data}}\) 是概率分布，其在支撑集上的概率和为 1，即
+\[
+\sum_{\mathbf{x}\in\mathcal{S}_{\text{data}}}
+P_{\text{data}}(\mathbf{x}) = 1.
+\]
+因此第一项等于
+\[
+\frac{\log 2}{2}.
+\]
+
+\subsubsection*{步骤 4：化简第二项 KL}
+
+对称地，第二项
+\[
+\frac{1}{2}
+\sum_{\mathbf{x}}
+P_G(\mathbf{x})
+\log \frac{P_G(\mathbf{x})}{M(\mathbf{x})}
+\]
+只在 \(\mathcal{S}_G\) 上有贡献。对 \(\mathbf{x}\in\mathcal{S}_G\)，有
+\[
+M(\mathbf{x}) = \frac{1}{2}P_G(\mathbf{x}),
+\]
+于是
+\begin{align*}
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_G}
+P_G(\mathbf{x})
+\log \frac{P_G(\mathbf{x})}{M(\mathbf{x})}
+&=
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_G}
+P_G(\mathbf{x})
+\log
+\frac{
+P_G(\mathbf{x})
+}{
+\frac{1}{2}P_G(\mathbf{x})
+}
+\\
+&=
+\frac{1}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_G}
+P_G(\mathbf{x})
+\log 2
+=
+\frac{\log 2}{2}
+\sum_{\mathbf{x}\in\mathcal{S}_G}
+P_G(\mathbf{x}).
+\end{align*}
+
+同理，由 \(P_G\) 为概率分布可知
+\[
+\sum_{\mathbf{x}\in\mathcal{S}_G}
+P_G(\mathbf{x}) = 1,
+\]
+故第二项也等于
+\[
+\frac{\log 2}{2}.
+\]
+
+\subsubsection*{步骤 5：合并两项得到常数}
+
+将两项相加，得到
+\[
+\mathrm{JSD}\bigl(P_{\text{data}}\|P_G\bigr)
+= \frac{\log 2}{2} + \frac{\log 2}{2}
+= \log 2.
+\]
+
+因此，在不重叠假设下，JS 散度是一个常数，数值仅与对数的底相关：
+若使用自然对数，则该常数为 \(\ln 2\)；若以 2 为底，则常数为 1。
+
+\subsection{小结}
+
+\begin{itemize}
+  \item JS 散度通过对称地引入均值分布 \(M\) 避免了 KL 散度在“完全不重叠”时变为 \(\infty\) 的问题；
+  \item 当两分布支撑集完全不相交时，JS 散度不再区分“谁更远”，而统一取常数 \(\log 2\)，在 GAN 理论分析中这是造成梯度消失现象的重要原因之一。
+\end{itemize}
+
+\section{强化学习中贝尔曼方程的推导}
+
+本节在马尔可夫决策过程（MDP）框架下，推导四个常用的贝尔曼方程：
+\begin{enumerate}
+  \item 给定策略的状态价值函数贝尔曼方程；
+  \item 给定策略的动作价值函数贝尔曼方程；
+  \item 最优状态价值函数贝尔曼最优性方程；
+  \item 最优动作价值函数贝尔曼最优性方程。
+\end{enumerate}
+推导过程中逐步写出依赖关系，并解释各符号的含义。
+
+\subsection{MDP 与回报的基本定义}
+
+假设环境可建模为一个 MDP：
+\[
+\bigl(\mathcal{S}, \mathcal{A}, p(s', r \mid s,a), \gamma\bigr),
+\]
+其中：
+\begin{itemize}
+  \item \(\mathcal{S}\)：状态集合；
+  \item \(\mathcal{A}\)：动作集合；
+  \item \(p(s', r \mid s,a)\)：在状态 \(s\) 采取动作 \(a\) 后，转移到状态 \(s'\) 并获得即时奖励 \(r\) 的联合概率；
+  \item \(\gamma \in [0,1)\)：折扣因子。
+\end{itemize}
+
+策略 \(\pi\) 给出了动作选择的条件分布
+\[
+\pi(a\mid s) = P(A_t=a \mid S_t=s).
+\]
+
+从时间步 \(t\) 开始的\textbf{回报}（discounted return）定义为
+\[
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1},
+\]
+其中 \(R_{t+1}\) 为从 \(S_t\) 转移到 \(S_{t+1}\) 时得到的奖励。
+
+\subsection{给定策略的状态价值函数贝尔曼方程}
+
+\subsubsection*{定义}
+
+在策略 \(\pi\) 下，状态价值函数定义为
+\[
+v_\pi(s) = \mathbb{E}_\pi\!\bigl[G_t \mid S_t = s\bigr],
+\]
+其中期望对之后的状态、动作和奖励的随机性取值，且从时间 \(t\) 开始遵循策略 \(\pi\)。
+
+\subsubsection*{第一步：利用回报的递归定义}
+
+由回报的定义，有
+\[
+G_t = R_{t+1} + \gamma G_{t+1}.
+\]
+代入状态价值函数的定义：
+\begin{align*}
+v_\pi(s)
+&= \mathbb{E}_\pi\!\bigl[G_t \mid S_t = s\bigr] \\
+&= \mathbb{E}_\pi\!\bigl[R_{t+1} + \gamma G_{t+1} \mid S_t = s\bigr] \\
+&= \mathbb{E}_\pi\!\bigl[R_{t+1} + \gamma G_{t+1} \mid S_t = s\bigr].
+\end{align*}
+
+\subsubsection*{第二步：条件期望展开}
+
+注意在给定 \(S_t = s\) 后，接下来会经历两个阶段：
+\begin{enumerate}
+  \item 策略 \(\pi\) 选择动作 \(A_t\)，概率为 \(\pi(a\mid s)\)；
+  \item 环境根据 \(p(s',r\mid s,a)\) 给出下一状态 \(S_{t+1}=s'\) 和奖励 \(R_{t+1}=r\)。
+\end{enumerate}
+
+因此可写为
+\begin{align*}
+v_\pi(s)
+&= \sum_{a\in\mathcal{A}} \pi(a\mid s)
+   \sum_{s'\in\mathcal{S}} \sum_r
+   p(s',r\mid s,a)\,
+   \mathbb{E}_\pi\!\bigl[R_{t+1} + \gamma G_{t+1}
+   \mid S_t = s, A_t = a, S_{t+1}=s', R_{t+1}=r\bigr].
+\end{align*}
+
+在条件中 \(R_{t+1}=r\) 已知，因此
+\[
+\mathbb{E}_\pi\!\bigl[R_{t+1} + \gamma G_{t+1}
+   \mid S_t = s, A_t = a, S_{t+1}=s', R_{t+1}=r\bigr]
+= r + \gamma\,\mathbb{E}_\pi\!\bigl[G_{t+1}\mid S_{t+1}=s'\bigr].
+\]
+
+而
+\[
+\mathbb{E}_\pi\!\bigl[G_{t+1}\mid S_{t+1}=s'\bigr] = v_\pi(s'),
+\]
+这是由价值函数定义（从时间 \(t+1\) 开始、处于状态 \(s'\) 后仍遵循策略 \(\pi\)）得到的。
+
+因此
+\begin{align*}
+v_\pi(s)
+&= \sum_{a} \pi(a\mid s)
+   \sum_{s'} \sum_r
+   p(s',r\mid s,a)\,
+   \bigl[r + \gamma v_\pi(s')\bigr].
+\end{align*}
+
+\subsubsection*{第三步：写成贝尔曼方程形式}
+
+最终得到\textbf{贝尔曼期望方程}：
+\[
+\boxed{
+v_\pi(s)
+= \sum_{a\in\mathcal{A}} \pi(a\mid s)
+  \sum_{s'\in\mathcal{S}}\sum_r
+  p(s',r\mid s,a)\bigl[r + \gamma v_\pi(s')\bigr].
+}
+\]
+
+该方程说明：状态价值等于“在当前状态按策略选动作、按环境动力学转移并获得即时奖励后，加上下一状态价值的折扣期望”。
+
+\subsection{给定策略的动作价值函数贝尔曼方程}
+
+\subsubsection*{定义}
+
+动作价值函数（Q 函数）定义为
+\[
+q_\pi(s,a)
+= \mathbb{E}_\pi\!\bigl[G_t \mid S_t = s, A_t = a\bigr].
+\]
+
+\subsubsection*{递归展开}
+
+同样利用 \(G_t = R_{t+1} + \gamma G_{t+1}\)：
+\begin{align*}
+q_\pi(s,a)
+&= \mathbb{E}_\pi\!\bigl[R_{t+1} + \gamma G_{t+1}
+   \mid S_t = s, A_t = a\bigr].
+\end{align*}
+
+在给定 \(S_t=s, A_t=a\) 后，下一步由环境给出 \(S_{t+1}=s'\)、\(R_{t+1}=r\)，
+概率为 \(p(s',r\mid s,a)\)，因此
+\begin{align*}
+q_\pi(s,a)
+&= \sum_{s'}\sum_r p(s',r\mid s,a)
+   \mathbb{E}_\pi\!\bigl[r + \gamma G_{t+1}
+   \mid S_t = s, A_t = a, S_{t+1}=s', R_{t+1}=r\bigr] \\
+&= \sum_{s'}\sum_r p(s',r\mid s,a)
+   \bigl[r + \gamma\,\mathbb{E}_\pi\!\bigl[G_{t+1}\mid S_{t+1}=s'\bigr]\bigr].
+\end{align*}
+
+在时间 \(t+1\) 之后，策略 \(\pi\) 会在状态 \(s'\) 上选择动作 \(A_{t+1}\)，
+于是
+\[
+\mathbb{E}_\pi\!\bigl[G_{t+1}\mid S_{t+1}=s'\bigr]
+= \sum_{a'\in\mathcal{A}} \pi(a'\mid s')\, q_\pi(s',a').
+\]
+
+因此
+\[
+\boxed{
+q_\pi(s,a)
+= \sum_{s'}\sum_r p(s',r\mid s,a)
+  \biggl[r + \gamma
+  \sum_{a'} \pi(a'\mid s') q_\pi(s',a')\biggr].
+}
+\]
+
+\subsection{最优状态价值函数的贝尔曼最优性方程}
+
+\subsubsection*{定义最优价值函数}
+
+最优状态价值函数定义为
+\[
+v_*(s) = \max_{\pi} v_\pi(s),
+\]
+即在所有策略中取得的最大状态价值。
+
+\subsubsection*{利用贝尔曼期望方程并取最大值}
+
+对任意策略 \(\pi\)，都有
+\[
+v_\pi(s)
+= \sum_{a} \pi(a\mid s)
+  \sum_{s',r} p(s',r\mid s,a)
+  \bigl[r + \gamma v_\pi(s')\bigr].
+\]
+
+特别地，对最优策略 \(\pi_*\) 有
+\[
+v_*(s) = v_{\pi_*}(s)
+= \sum_{a} \pi_*(a\mid s)
+  \sum_{s',r} p(s',r\mid s,a)
+  \bigl[r + \gamma v_{\pi_*}(s')\bigr].
+\]
+
+注意：在最优策略下，给定状态 \(s\)，我们可以选择使右侧期望值最大的动作，
+于是有
+\[
+v_*(s)
+= \max_{a\in\mathcal{A}}
+  \sum_{s',r} p(s',r\mid s,a)
+  \bigl[r + \gamma v_*(s')\bigr].
+\]
+
+这就是\textbf{状态价值的贝尔曼最优性方程}：
+\[
+\boxed{
+v_*(s)
+= \max_{a\in\mathcal{A}}
+  \sum_{s'\in\mathcal{S}}\sum_r
+  p(s',r\mid s,a)
+  \bigl[r + \gamma v_*(s')\bigr].
+}
+\]
+
+\subsection{最优动作价值函数的贝尔曼最优性方程}
+
+\subsubsection*{定义最优 Q 函数}
+
+最优动作价值函数定义为
+\[
+q_*(s,a) = \max_{\pi} q_\pi(s,a).
+\]
+
+另一方面，对于最优策略 \(\pi_*\)，有
+\[
+v_*(s) = \max_a q_*(s,a).
+\]
+
+\subsubsection*{递归展开}
+
+从回报递归出发：
+\begin{align*}
+q_*(s,a)
+&= \mathbb{E}\bigl[G_t \mid S_t = s, A_t = a,\ \pi=\pi_*\bigr] \\
+&= \mathbb{E}\bigl[R_{t+1} + \gamma G_{t+1}
+    \mid S_t = s, A_t = a,\ \pi=\pi_*\bigr].
+\end{align*}
+
+与前面类似，给定 \(s,a\) 后由环境采样得到 \(s',r\)：
+\[
+q_*(s,a)
+= \sum_{s',r} p(s',r\mid s,a)
+  \mathbb{E}\bigl[r + \gamma G_{t+1} \mid S_{t+1}=s', R_{t+1}=r,\ \pi=\pi_*\bigr].
+\]
+
+此时
+\[
+\mathbb{E}\bigl[G_{t+1}\mid S_{t+1}=s',\ \pi=\pi_*\bigr]
+= v_*(s')
+= \max_{a'} q_*(s',a').
+\]
+
+代入得到
+\[
+q_*(s,a)
+= \sum_{s',r} p(s',r\mid s,a)
+  \bigl[r + \gamma \max_{a'} q_*(s',a')\bigr].
+\]
+
+因此最优 Q 函数的贝尔曼最优性方程为
+\[
+\boxed{
+q_*(s,a)
+= \sum_{s'\in\mathcal{S}}\sum_r
+  p(s',r\mid s,a)
+  \bigl[r + \gamma \max_{a'\in\mathcal{A}} q_*(s',a')\bigr].
+}
+\]
+
+\subsection{小结}
+
+\begin{itemize}
+  \item 给定策略的贝尔曼\emph{期望}方程体现了：价值等于“一步奖励 + 下一状态价值的折扣期望”；
+  \item 最优性的贝尔曼方程则在此基础上对策略或动作取最大值，用于刻画最优策略应满足的自洽条件；
+  \item 四个方程构成了强化学习中策略评估与策略改进（或值迭代、Q 学习等）算法的理论基础。
+\end{itemize}
+
+
+\begin{thebibliography}{99}
+
+\bibitem{Goodfellow2014}
+I.~Goodfellow, J.~Pouget-Abadie, M.~Mirza, \emph{et al.},
+\newblock Generative Adversarial Nets,
+\newblock In: \emph{Advances in Neural Information Processing Systems (NeurIPS)}, 2014.
+
+\bibitem{Goodfellow-book}
+I.~Goodfellow, Y.~Bengio, A.~Courville,
+\newblock \emph{Deep Learning},
+\newblock MIT Press, 2016.
+
+\bibitem{SuttonBarto2018}
+R.~S. Sutton, A.~G. Barto,
+\newblock \emph{Reinforcement Learning: An Introduction} (2nd ed.),
+\newblock MIT Press, 2018.
+
+\bibitem{Puterman1994}
+M.~L. Puterman,
+\newblock \emph{Markov Decision Processes: Discrete Stochastic Dynamic Programming},
+\newblock Wiley, 1994.
+
+\end{thebibliography}
+
+\end{document}

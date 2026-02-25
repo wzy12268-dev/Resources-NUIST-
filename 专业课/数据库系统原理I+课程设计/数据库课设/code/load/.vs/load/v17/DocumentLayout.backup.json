@@ -1,0 +1,244 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|d:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\changepasswordform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\changepasswordform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|d:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\studentinfoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\studentinfoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminstudentmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminstudentmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|d:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\studentinfoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\studentinfoform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|d:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\changepasswordform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\changepasswordform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|d:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminjobpostingmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminjobpostingmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminjobpostingmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminjobpostingmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminmajormanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminmajormanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminstudentmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminstudentmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminteachermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminteachermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminteachermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminteachermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminemployermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminemployermanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminuseraccountmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminuseraccountmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\adminuseraccountmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2EB03B71-9872-4B5B-B3BF-C0256B47C61A}|load\\load.csproj|solutionrelative:load\\adminuseraccountmanageform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChangePasswordForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\ChangePasswordForm.cs",
+              "RelativeDocumentMoniker": "load\\ChangePasswordForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\ChangePasswordForm.cs",
+              "RelativeToolTip": "load\\ChangePasswordForm.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAQwDsAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T12:57:50.988Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ChangePasswordForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\ChangePasswordForm.cs",
+              "RelativeDocumentMoniker": "load\\ChangePasswordForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\ChangePasswordForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\ChangePasswordForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T12:57:49.105Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StudentInfoForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\StudentInfoForm.cs",
+              "RelativeDocumentMoniker": "load\\StudentInfoForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\StudentInfoForm.cs",
+              "RelativeToolTip": "load\\StudentInfoForm.cs",
+              "ViewState": "AgIAAFMAAAAAAAAAAAArwGEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T12:57:08.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "StudentInfoForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\StudentInfoForm.cs",
+              "RelativeDocumentMoniker": "load\\StudentInfoForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\StudentInfoForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\StudentInfoForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-10T12:57:07.607Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdminStudentManageForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminStudentManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminStudentManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminStudentManageForm.cs",
+              "RelativeToolTip": "load\\AdminStudentManageForm.cs",
+              "ViewState": "AgIAADUBAAAAAAAAAAAAwDwBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T01:01:26.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AdminStudentManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminStudentManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminStudentManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminStudentManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminStudentManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T01:01:04.845Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AdminMajorManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminMajorManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminMajorManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminMajorManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminMajorManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T00:59:56.913Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminJobPostingManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminJobPostingManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminJobPostingManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminJobPostingManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminJobPostingManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T00:58:45.102Z",
+              "EditorCaption": " [\u8BBE\u8BA1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AdminJobPostingManageForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminJobPostingManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminJobPostingManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminJobPostingManageForm.cs",
+              "RelativeToolTip": "load\\AdminJobPostingManageForm.cs",
+              "ViewState": "AgIAAOsAAAAAAAAAAAAAAPoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T00:59:12.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AdminTeacherManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminTeacherManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminTeacherManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminTeacherManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminTeacherManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T01:02:00.1Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AdminTeacherManageForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminTeacherManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminTeacherManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminTeacherManageForm.cs",
+              "RelativeToolTip": "load\\AdminTeacherManageForm.cs",
+              "ViewState": "AgIAAMsAAAAAAAAAAAAAAN8AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T01:02:18.843Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AdminEmployerManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminEmployerManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminEmployerManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminEmployerManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminEmployerManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-09T12:12:39.845Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AdminUserAccountManageForm.cs",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminUserAccountManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminUserAccountManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminUserAccountManageForm.cs",
+              "RelativeToolTip": "load\\AdminUserAccountManageForm.cs",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAAAKoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T00:33:33.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AdminUserAccountManageForm.cs [\u8BBE\u8BA1]",
+              "DocumentMoniker": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminUserAccountManageForm.cs",
+              "RelativeDocumentMoniker": "load\\AdminUserAccountManageForm.cs",
+              "ToolTip": "D:\\\u684C\u9762\\\u6570\u636E\u5E93\u8BFE\u8BBE\\code\\load\\load\\AdminUserAccountManageForm.cs [\u8BBE\u8BA1]",
+              "RelativeToolTip": "load\\AdminUserAccountManageForm.cs [\u8BBE\u8BA1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T00:32:54.453Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

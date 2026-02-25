@@ -1,0 +1,25 @@
+(ERRORCHAR, "#") (ID, "include") (RELOP, "<") (ID, "studio") (ERRORCHAR, ".") 
+(ID, "h") (RELOP, ">") (ERRORCHAR, "") (ID, "int") (ID, "main") 
+(RELOP, "(") (ID, "int") (ID, "argc") (ERRORCHAR, ",") (ID, "char") 
+(ID, "const") (RELOP, "*") (ID, "argv") (ERRORCHAR, "[") (ERRORCHAR, "]") 
+(RELOP, ")") (ERRORCHAR, "") (RELOP, "{") (ERRORCHAR, "") (ID, "char") 
+(RELOP, "*") (ID, "str") (RELOP, "=") (ERRORCHAR, """) (ID, "String123") 
+(ERRORCHAR, """) (RELOP, ";") (ERRORCHAR, "") (ID, "int") (ID, "num1") 
+(RELOP, "=") (NUM, "45") (ID, "a7") (ERRORCHAR, ",") (ID, "num2") 
+(RELOP, "=") (NUM, "0187") (ERRORCHAR, ",") (ID, "num3") (RELOP, "=") 
+(NUM, "0") (ID, "x1S35") (RELOP, ";") (ERRORCHAR, "") (ID, "int") 
+(ID, "floatnum") (RELOP, "=") (NUM, "178.003") (RELOP, ";") (ERRORCHAR, "@") 
+(IF, "if") (RELOP, "(") (NUM, "6.4") (RELOP, "<=") (NUM, "5.8") 
+(RELOP, ")") (ERRORCHAR, "") (ID, "printf") (RELOP, "(") (ERRORCHAR, """) 
+(ID, "Yes") (ERRORCHAR, """) (RELOP, ")") (ERRORCHAR, "") (IF, "if") 
+(RELOP, "(") (ID, "floatn") (RELOP, ">") (NUM, "5") (RELOP, ")") 
+(ID, "printf") (RELOP, "(") (ERRORCHAR, """) (ID, "No") (ERRORCHAR, "@") 
+(ERRORCHAR, """) (RELOP, ")") (RELOP, ";") (ERRORCHAR, "") (ID, "for") 
+(RELOP, "(") (ID, "int") (ID, "i") (RELOP, "=") (RELOP, ";") 
+(ID, "i") (RELOP, "<") (RELOP, ">") (NUM, "6") (RELOP, ";") 
+(ID, "i") (RELOP, "+") (RELOP, "+") (RELOP, "+") (RELOP, ")") 
+(RELOP, "{") (ID, "num2") (RELOP, "+") (RELOP, "-") (RELOP, "=") 
+(NUM, "10") (RELOP, ";") (ERRORCHAR, "") (ID, "printf") (RELOP, "(") 
+(ERRORCHAR, """) (ERRORCHAR, "%") (ERRORCHAR, "%") (NUM, "2") (ID, "d") 
+(ERRORCHAR, "@") (ERRORCHAR, """) (ERRORCHAR, ",") (ID, "num2") (RELOP, ")") 
+(RELOP, ";") (ERRORCHAR, "") (RELOP, "}") (ERRORCHAR, "") 

@@ -1,0 +1,254 @@
+\documentclass[UTF8]{ctexart}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+\ctexset{
+  section = {
+    format = \raggedright\Large\bfseries, % 左对齐 + 字号 + 粗体
+  }
+}
+\begin{document}
+\pagestyle{plain}   % 去掉页眉，只保留页脚页码
+\begin{center}
+  {\LARGE\bfseries 作业四}\\[0.5em]
+\end{center}
+
+\section{多分类问题的评价指标}
+
+本作业讨论在多分类问题中，如何根据预测结果与 ground truth（真实标签）计算
+Precision、Recall 及 ROC/AUC 等评价指标，并区分 micro 与 macro 两种汇总方式。
+重点说明各个公式中变量的含义以及实际的计算步骤。
+
+\subsection{基本记号与多分类混淆矩阵}
+
+设共有 \(n\) 个样本，多分类任务共有 \(K\) 个类别。记
+
+\begin{itemize}
+  \item 第 \(i\) 个样本的真实类别为 \(y_i \in \{1,\dots,K\}\)；
+  \item 模型给出的预测类别为 \(\hat{y}_i \in \{1,\dots,K\}\)；
+  \item 有时模型还会输出属于每个类别的预测得分或概率，记为
+  \(s_{i,k}\)（样本 \(i\) 属于类别 \(k\) 的得分）。
+\end{itemize}
+
+定义多分类的混淆矩阵 \(C = (n_{ij})\in \mathbb{N}^{K\times K}\)：
+\[
+n_{ij} = \bigl|\{\, i \mid y_i = i,\; \hat{y}_i = j\,\}\bigr| ,
+\]
+即真实类别为 \(i\)、预测为 \(j\) 的样本个数。
+
+对每个类别 \(k\)，可以在“\(\text{类别 }k\) vs 其余类别”的二分类视角下定义：
+
+\begin{align*}
+\text{TP}_k &= n_{kk},\\
+\text{FP}_k &= \sum_{\substack{i=1 \\ i \neq k}}^K n_{ik},\\
+\text{FN}_k &= \sum_{\substack{j=1 \\ j \neq k}}^K n_{kj},\\
+\text{TN}_k &= \sum_{\substack{i=1 \\ i \neq k}}^K \sum_{\substack{j=1 \\ j \neq k}}^K n_{ij}.
+\end{align*}
+
+其中：
+\begin{itemize}
+  \item \(\text{TP}_k\)：真实为类别 \(k\)，且预测也为 \(k\) 的样本数；
+  \item \(\text{FP}_k\)：真实不是 \(k\)，但预测成 \(k\) 的样本数；
+  \item \(\text{FN}_k\)：真实是 \(k\)，但预测成其它类别的样本数；
+  \item \(\text{TN}_k\)：真实不是 \(k\)，预测也不是 \(k\) 的样本数。
+\end{itemize}
+
+所有样本总数为
+\[
+N = \sum_{i=1}^K \sum_{j=1}^K n_{ij}.
+\]
+
+后续所有多分类 Precision / Recall、micro / macro 指标，都可以基于这些量来计算。
+
+\section{Precision：单类、micro-P 与 macro-P}
+
+\subsection{单类别 Precision 的定义}
+
+在“类别 \(k\) vs 其余”这个二分类视角下，类别 \(k\) 的 Precision 定义为
+\[
+P_k = \frac{\text{TP}_k}{\text{TP}_k + \text{FP}_k},
+\]
+当分母为 0 时通常约定 \(P_k = 0\) 或忽略该类。
+
+含义：在所有被模型预测为类别 \(k\) 的样本中，有多少比例是真的类别 \(k\)。
+Precision 越高，说明该类别的预测结果“含水分”越少。
+
+\subsection{macro-P：对各类别 Precision 的算术平均}
+
+macro-P（宏平均 Precision）是对每个类别的 Precision 先分别计算，然后按类别做平均，不区分类别的样本数量多少。定义为
+\[
+\text{macro-P} = \frac{1}{K} \sum_{k=1}^K P_k
+= \frac{1}{K} \sum_{k=1}^K
+\frac{\text{TP}_k}{\text{TP}_k + \text{FP}_k}.
+\]
+
+计算步骤总结：
+
+\begin{enumerate}
+  \item 根据混淆矩阵求出每个类别的 \(\text{TP}_k\)、\(\text{FP}_k\)；
+  \item 逐类计算 \(P_k = \text{TP}_k / (\text{TP}_k + \text{FP}_k)\)；
+  \item 对所有 \(P_k\) 做算术平均。
+\end{enumerate}
+
+macro-P 的特点是：各类别权重相同，对样本较少的小类别也同样重视，因此适合用来衡量模型在“类别层面”的整体表现。
+
+\subsection{micro-P：在样本层面聚合}
+
+micro-P（微平均 Precision）先在所有类别上汇总 TP 和 FP，然后再整体计算一次 Precision。定义为
+\[
+\text{micro-P} =
+\frac{\sum_{k=1}^K \text{TP}_k}{
+      \sum_{k=1}^K \text{TP}_k + \sum_{k=1}^K \text{FP}_k }.
+\]
+
+计算步骤总结：
+
+\begin{enumerate}
+  \item 在所有类别上累加 \(\text{TP}_k\) 得到 \(\textstyle\sum_k \text{TP}_k\)；
+  \item 在所有类别上累加 \(\text{FP}_k\) 得到 \(\textstyle\sum_k \text{FP}_k\)；
+  \item 代入上式得到 micro-P。
+\end{enumerate}
+
+micro-P 的特点是：每个样本权重相同，在样本数较多的大类别上更敏感，因此反映的是“全局样本级别”的 Precision。
+
+\section{Recall：单类、micro-R 与 macro-R}
+
+\subsection{单类别 Recall 的定义}
+
+在“类别 \(k\) vs 其余”的视角下，类别 \(k\) 的 Recall 定义为
+\[
+R_k = \frac{\text{TP}_k}{\text{TP}_k + \text{FN}_k}.
+\]
+
+含义：在所有真实属于类别 \(k\) 的样本中，有多少比例被模型正确识别为 \(k\)。
+Recall 越高，说明该类别漏检的情况越少。
+
+\subsection{macro-R：对各类别 Recall 的算术平均}
+
+macro-R（宏平均 Recall）定义为
+\[
+\text{macro-R} = \frac{1}{K} \sum_{k=1}^K R_k
+               = \frac{1}{K} \sum_{k=1}^K
+                 \frac{\text{TP}_k}{\text{TP}_k + \text{FN}_k}.
+\]
+
+计算方法与 macro-P 类似，只是使用 \(\text{FN}_k\) 替代 \(\text{FP}_k\)。macro-R 体现“各类别召回率的平均水平”，对小类别同样敏感。
+
+\subsection{micro-R：在样本层面聚合}
+
+micro-R（微平均 Recall）先在所有类别上汇总 TP 与 FN，再计算一次整体 Recall：
+\[
+\text{micro-R} =
+\frac{\sum_{k=1}^K \text{TP}_k}{
+      \sum_{k=1}^K \text{TP}_k + \sum_{k=1}^K \text{FN}_k }.
+\]
+
+计算步骤：
+
+\begin{enumerate}
+  \item 在所有类别上累加 \(\text{TP}_k\)、\(\text{FN}_k\)；
+  \item 代入公式得到 micro-R。
+\end{enumerate}
+
+对于单标签多分类问题（每个样本属于且只属于一个类别），可以证明
+\[
+\text{micro-P} = \text{micro-R} = \text{micro-F1},
+\]
+它们都等价于整体准确率（Accuracy）。但在类不平衡场景下，macro-P / macro-R 会更清楚地暴露“小类被忽视”的问题。
+
+\section{micro-ROC 与 macro-ROC 及 AUC}
+
+\subsection{二分类 ROC 与 AUC}
+
+在二分类任务中，假设模型对每个样本给出一个“属于正类的得分” \(s_i\)，我们通过改变阈值 \(t\) 来得到不同的预测结果：
+
+\[
+\hat{y}_i(t) =
+\begin{cases}
+1, & s_i \ge t,\\
+0, & s_i < t.
+\end{cases}
+\]
+
+对每一个阈值 \(t\)，都可以计算出：
+
+\begin{align*}
+\text{TPR}(t) &= \frac{\text{TP}(t)}{\text{TP}(t) + \text{FN}(t)}  &&\text{（真正率，Recall）},\\
+\text{FPR}(t) &= \frac{\text{FP}(t)}{\text{FP}(t) + \text{TN}(t)}  &&\text{（假正率）}.
+\end{align*}
+
+将所有阈值下的点 \((\text{FPR}(t), \text{TPR}(t))\) 连接，得到 ROC 曲线；曲线下的面积即为 AUC（Area Under Curve），数值越大，说明模型越倾向于把正类得分排在负类之前。
+
+\subsection{多分类下的一对多}
+
+在多分类问题中，常用的一种处理方式是：对每个类别 \(k\)，使用“类别 \(k\) 为正类、其余类别为负类”的一对多（one-vs-rest）方式构造二分类子问题：
+
+\begin{itemize}
+  \item 对样本 \(i\)，定义二分类标签
+  \[
+  z_{i,k} =
+  \begin{cases}
+  1, & y_i = k,\\
+  0, & y_i \neq k;
+  \end{cases}
+  \]
+  \item 对应的正类得分为 \(s_{i,k}\)。
+\end{itemize}
+
+对每个类别 \(k\)，都可以用 \(\{(z_{i,k}, s_{i,k})\}_{i=1}^n\) 画出其二分类 ROC 曲线，并计算单类的 AUC，记作 \(\text{AUC}_k\)。
+
+基于这些 per-class ROC / AUC，可以定义 micro-ROC/macro-ROC 及对应的 AUC。
+
+\subsection{macro-ROC 与 macro-AUC}
+
+macro-ROC 的思想是：先对每个类别单独画 ROC，再对类别层面进行平均。
+
+\begin{itemize}
+  \item 对每个类别 \(k\)，分别计算其 ROC 曲线（\(\text{FPR}_k(t), \text{TPR}_k(t)\)）和 AUC 值 \(\text{AUC}_k\)；
+  \item 若需要画出“宏平均 ROC 曲线”，可以在一组设定好的 FPR 取值（如 0, 0.01, \dots, 1）上，对各类别的 TPR 按 FPR 对齐后取平均；
+  \item 宏平均 AUC 通常直接定义为各类别 AUC 的算术平均：
+  \[
+  \text{macro-AUC} = \frac{1}{K} \sum_{k=1}^K \text{AUC}_k.
+  \]
+\end{itemize}
+
+macro-ROC / macro-AUC 与 macro-P/macro-R 一样，对每个类别给予相同的权重，更关注“小类”的识别能力。
+
+\subsection{micro-ROC 与 micro-AUC}
+
+micro-ROC 的思想是：把所有类别的预测当成一个整体二分类问题来处理。常见的做法有两种等价理解：
+
+\begin{itemize}
+  \item 在每一个阈值 \(t\) 下，分别计算每个类别的 \(\text{TP}_k(t), \text{FP}_k(t), \text{FN}_k(t), \text{TN}_k(t)\)，然后在类别层面做汇总：
+  \[
+  \text{micro-TPR}(t) =
+  \frac{\sum_{k=1}^K \text{TP}_k(t)}{\sum_{k=1}^K \bigl(\text{TP}_k(t)+\text{FN}_k(t)\bigr)},
+  \quad
+  \text{micro-FPR}(t) =
+  \frac{\sum_{k=1}^K \text{FP}_k(t)}{\sum_{k=1}^K \bigl(\text{FP}_k(t)+\text{TN}_k(t)\bigr)}.
+  \]
+  将所有阈值下的 \((\text{micro-FPR}(t), \text{micro-TPR}(t))\) 画在同一张图上，得到 micro-ROC；
+  \item 或者将所有类别的预测结果“展开”为 \(n \times K\) 个二分类样本对：
+  每一对 \((i,k)\) 看成一个“是否为类别 \(k\)”的二分类样本，真实标签为 \(z_{i,k}\)，得分为 \(s_{i,k}\)，然后按普通二分类方式直接计算 ROC/AUC。该 AUC 即为 micro-AUC。
+\end{itemize}
+
+micro-ROC/micro-AUC 与 micro-P/micro-R 类似，对每个“样本-类别对”赋予相同权重，从而在总体样本量多的类别上权重更大。
+
+\subsection{总结：micro 与 macro 的差异}
+
+对于 Precision、Recall、ROC/AUC 等多分类评价指标，micro 与 macro 的主要差别体现在“加权方式”上：
+
+\begin{itemize}
+  \item \textbf{macro}：先逐类计算，再对类别做平均，各类别权重相同，适合考察模型在“小类”上的表现；
+  \item \textbf{micro}：先在样本层面汇总，再整体计算，每个样本（或样本-类别对）权重相同，大类别的影响更大，更接近“整体样本级别”指标。
+\end{itemize}
+
+在实际实验中，通常会同时给出 micro 与 macro 两种结果，以便全面反映模型在多分类任务中的性能。
+
+\end{document}

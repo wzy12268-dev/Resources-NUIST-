@@ -1,0 +1,31 @@
+D:\anaconda3\python.exe D:\Pycharm\人工智能实验\kmeans聚类\plot_face_recognition.py 
+Total dataset size:
+n_samples: 1288
+n_features: 1850
+n_classes: 7
+Extracting the top 150 eigenfaces from 966 faces
+done in 0.289s
+Projecting the input data on the eigenfaces orthonormal basis
+done in 0.021s
+Fitting the classifier to the training set
+done in 8.440s
+Best estimator found by grid search:
+SVC(C=2097.633294376096, class_weight='balanced', gamma=0.0022759901293236584)
+Predicting people's names on the test set
+done in 0.063s
+                   precision    recall  f1-score   support
+
+     Ariel Sharon       0.71      0.77      0.74        13
+     Colin Powell       0.75      0.90      0.82        60
+  Donald Rumsfeld       0.77      0.74      0.75        27
+    George W Bush       0.91      0.92      0.92       146
+Gerhard Schroeder       0.86      0.76      0.81        25
+      Hugo Chavez       0.91      0.67      0.77        15
+       Tony Blair       0.93      0.75      0.83        36
+
+         accuracy                           0.85       322
+        macro avg       0.84      0.79      0.81       322
+     weighted avg       0.86      0.85      0.85       322
+
+
+进程已结束，退出代码为 0

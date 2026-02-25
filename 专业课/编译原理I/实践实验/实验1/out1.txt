@@ -1,0 +1,2 @@
+(WHILE, "while") (ID, "a") (RELOP, ">=") (RELOP, "-") (NUM, "1.2E-2") 
+(ERRORCHAR, "") (DO, "do") (ID, "b") (RELOP, "<=") (NUM, "2") 

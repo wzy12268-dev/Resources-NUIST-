@@ -1,0 +1,9 @@
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M001', '计算机科学与技术', 'CL04');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M002', '软件工程', 'CL04');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M003', '信息安全', 'CL04');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M004', '工商管理', 'CL01');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M005', '会计学', 'CL01');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M006', '金融学', 'CL03');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M007', '国际经济与贸易', 'CL03');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M008', '电子信息工程', 'CL02');
+INSERT INTO Major (专业编号, 专业名称, 学院编号) VALUES ('M009', '通信工程', 'CL02');

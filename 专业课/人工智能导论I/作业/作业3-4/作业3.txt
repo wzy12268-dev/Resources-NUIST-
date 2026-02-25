@@ -1,0 +1,296 @@
+\documentclass[UTF8]{ctexart}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+\ctexset{
+  section = {
+    format = \raggedright\Large\bfseries, % 左对齐 + 字号 + 粗体
+  }
+}
+\begin{document}
+\pagestyle{plain}   % 去掉页眉，只保留页脚页码
+\begin{center}
+  {\LARGE\bfseries 作业三}\\[0.5em]
+\end{center}
+
+\section{问题背景与基本符号}
+
+本作业讨论在有标签数据集上，如何利用若干常用指标评价聚类结果的好坏。所谓“有标签”，指每个样本既有真实类别（ground truth），又有聚类算法给出的簇编号。
+
+设共有 \(n\) 个样本：
+\begin{itemize}
+  \item 第 \(i\) 个样本的真实类别记作 \(y_i \in \{1,\dots,R\}\)，其中 \(R\) 为真实类别数；
+  \item 同一样本的聚类结果记作 \(c_i \in \{1,\dots,S\}\)，其中 \(S\) 为聚类簇数。
+\end{itemize}
+
+为同时表达真实类别和聚类结果，通常先构造一个列联表（交叉表）。记
+\[
+n_{ij} = \bigl|\{k \mid y_k = i,\; c_k = j\}\bigr|
+\]
+表示真实类别为 \(i\) 且被分到簇 \(j\) 的样本数。对行和列分别求和可得
+\[
+a_i = \sum_{j=1}^S n_{ij}, \qquad
+b_j = \sum_{i=1}^R n_{ij}, \qquad
+\sum_{i=1}^R a_i = \sum_{j=1}^S b_j = n.
+\]
+
+后文的所有指标都可以用 \(n_{ij}, a_i, b_j\) 来表示，因此只要掌握如何从标签构造列联表，就可以统一理解这些指标。
+
+\section{Unadjusted Rand Index 与 Adjusted Rand Index}
+
+\subsection{成对样本的一致性思想}
+
+Rand 类指标从“成对样本”的角度衡量两个划分的一致性。考虑任意一对不同样本 \((p,q)\)，其真实标签和聚类标签之间可能出现如下四种组合：
+
+\begin{itemize}
+  \item 真实标签相同、聚类结果也在同一簇（真阳性）；
+  \item 真实标签不同、聚类结果也在不同簇（真阴性）；
+  \item 真实标签相同、聚类结果却在不同簇（假阴性）；
+  \item 真实标签不同、聚类结果却在同一簇（假阳性）。
+\end{itemize}
+
+前两种可以统称为“划分一致”，后两种为“划分不一致”。全部样本共有
+\[
+D = \binom{n}{2}
+\]
+对成对样本。Rand 指数的基本思想就是：
+\[
+\text{RI} = \frac{\text{划分一致的样本对数}}{\text{所有样本对数}}.
+\]
+
+\subsection{未调整 Rand 指数（RI）}
+
+未调整 Rand 指数形式上定义为
+\[
+\text{RI} = \frac{\text{TP} + \text{TN}}{\binom{n}{2}},
+\]
+其中 TP 表示“真实同类且聚类同簇”的样本对数，TN 表示“真实不同类且聚类不同簇”的样本对数。
+
+若直接枚举所有样本对，则需要 \(O(n^2)\) 的时间。实际计算中，一般利用列联表进行统计。对同一个格子 \(n_{ij}\) 而言，其中任意两样本都属于“真实同类且聚类同簇”，因此格子 \((i,j)\) 对 TP 的贡献为
+\[
+\binom{n_{ij}}{2}.
+\]
+将所有格子的贡献求和即可得到 TP：
+\[
+\text{TP} = \sum_{i=1}^R \sum_{j=1}^S \binom{n_{ij}}{2}.
+\]
+
+真实同类的样本对总数为
+\[
+N_{\text{sameGT}} = \sum_{i=1}^R \binom{a_i}{2},
+\]
+聚类同簇的样本对总数为
+\[
+N_{\text{sameCluster}} = \sum_{j=1}^S \binom{b_j}{2}.
+\]
+因此有
+\[
+\text{FN} = N_{\text{sameGT}} - \text{TP}, \qquad
+\text{FP} = N_{\text{sameCluster}} - \text{TP}.
+\]
+再由
+\[
+\text{TN} = D - \text{TP} - \text{FP} - \text{FN}
+\]
+即可得到 RI。
+
+RI 的取值范围为 \([0,1]\)。当聚类结果与真实标签完全一致时，RI 取 1；当聚类结果与真实标签完全独立时，RI 的值通常仍然偏高，这是因为“完全随机划分”下也会有一部分样本对被“碰巧”划分一致，这也是 RI 的主要局限。
+
+\subsection{调整 Rand 指数（ARI）}
+
+为消除“随机一致性”的影响，引入调整 Rand 指数（Adjusted Rand Index）。其出发点是：在保持每个真实类别样本数 \(a_i\) 和每个簇样本数 \(b_j\) 固定的前提下，若将样本随机打乱，真实划分与聚类结果独立，则“真实同类且聚类同簇”的样本对数 \(A\) 会有一个理论期望值；我们希望用“实际值减去期望值”，再做归一化。
+
+记
+\[
+A = \sum_{i=1}^R\sum_{j=1}^S \binom{n_{ij}}{2}, \qquad
+B = \sum_{i=1}^R \binom{a_i}{2}, \qquad
+C = \sum_{j=1}^S \binom{b_j}{2}, \qquad
+D = \binom{n}{2}.
+\]
+
+在超几何分布模型下，可以得到
+\[
+\mathbb{E}[A] = \frac{BC}{D}.
+\]
+于是 ARI 定义为
+\[
+\text{ARI} = 
+\frac{
+  A - \dfrac{BC}{D}
+}{
+  \dfrac{B + C}{2} - \dfrac{BC}{D}
+}.
+\]
+
+\noindent 其中：
+\begin{itemize}
+  \item 分子反映“实际一致程度”比“随机情况下的期望一致程度”高出多少；
+  \item 分母反映“最大可能的一致程度”比“随机情况下的期望一致程度”高出多少；
+  \item 因此，\(\text{ARI}=1\) 表示完全一致，\(\text{ARI}=0\) 表示与随机划分相当，负值表示比随机还差。
+\end{itemize}
+
+在实际使用中，只要给定真实标签和聚类结果，用上式即可通过列联表一次性计算出 ARI。常用库（如 \texttt{scikit-learn}）中也提供了现成函数。
+
+\section{Mutual Information 相关指标}
+
+\subsection{把两个划分视作随机变量}
+
+互信息类指标采用信息论方法，将“真实标签划分”和“聚类划分”看作两个离散随机变量。设
+
+\begin{itemize}
+  \item 随机变量 \(U\) 的取值为真实类别 \(1,\dots,R\)，样本落在类别 \(i\) 的概率为 \(P(U=i)\)；
+  \item 随机变量 \(V\) 的取值为簇编号 \(1,\dots,S\)，样本落在簇 \(j\) 的概率为 \(P(V=j)\)。
+\end{itemize}
+
+由列联表可得
+\[
+p_{ij} = P(U=i,V=j) = \frac{n_{ij}}{n}, \quad
+p_i = P(U=i) = \frac{a_i}{n}, \quad
+q_j = P(V=j) = \frac{b_j}{n}.
+\]
+
+\subsection{互信息（MI）的定义与直观含义}
+
+互信息 \(I(U;V)\) 描述的是：在观察到变量 \(V\) 的取值后，关于变量 \(U\) 的不确定性减少了多少。其定义为
+\[
+I(U;V)
+= \sum_{i=1}^R \sum_{j=1}^S
+p_{ij} \log \frac{p_{ij}}{p_i q_j},
+\]
+其中 \(p_{ij}=0\) 时对应项按 0 处理，\(\log\) 的底可以取自然对数或 2，对相对比较结果无实质影响。
+
+直观理解如下：
+\begin{itemize}
+  \item 若 \(U\) 与 \(V\) 独立，则有 \(p_{ij} = p_i q_j\)，此时分子分母相等，\(\log(p_{ij}/p_i q_j)=0\)，互信息为 0；
+  \item 若 \(U\) 与 \(V\) 之间存在强相关（例如完全一致或近似一致），则某些 \(p_{ij}\) 明显大于 \(p_i q_j\)，对应项贡献为正，互信息取较大值。
+\end{itemize}
+
+因此，MI 越大表示真实标签与聚类结果之间的相关性越强。
+
+\subsection{熵与归一化互信息（NMI）}
+
+熵刻画单个随机变量的不确定性：
+\[
+H(U) = -\sum_{i=1}^R p_i \log p_i, \qquad
+H(V) = -\sum_{j=1}^S q_j \log q_j.
+\]
+两者越大，说明类别或簇本身越“分散”。
+
+原始的互信息 \(I(U;V)\) 的取值范围依赖于数据分布，不便于不同数据集或不同任务之间直接比较，因此通常进行归一化。常用的一种对称归一化形式为
+\[
+\text{NMI}(U,V) = \frac{I(U;V)}{\sqrt{H(U)\,H(V)}}.
+\]
+在该定义下，\(\text{NMI} \in [0,1]\)，并具有以下性质：
+\begin{itemize}
+  \item 若聚类结果与真实标签完全一致，则 \(I(U;V)=H(U)=H(V)\)，\(\text{NMI}=1\)；
+  \item 若两者独立，则 \(I(U;V)=0\)，\(\text{NMI}=0\)；
+  \item 中间值反映相关性的强弱，适合用于多种聚类算法结果的横向比较。
+\end{itemize}
+
+还有其他归一化形式（如 \(2I(U;V)/(H(U)+H(V))\)），本质思想相同。
+
+\subsection{调整互信息（AMI）}
+
+与 ARI 类似，互信息在随机划分下通常也不为 0。为消除随机一致性带来的影响，引入调整互信息（Adjusted Mutual Information）。其基本思想是：
+
+\begin{enumerate}
+  \item 在给定 \(a_i\) 和 \(b_j\) 的前提下，假设真实标签和聚类结果相互独立、随机分配；
+  \item 在该模型下，可以计算（或近似计算）互信息 \(I(U;V)\) 的期望值 \(\mathbb{E}[I(U;V)]\)；
+  \item 用“实际的互信息减去期望互信息”，并再进行归一化。
+\end{enumerate}
+
+一种常用的 AMI 形式为
+\[
+\text{AMI}(U,V) =
+\frac{
+  I(U;V) - \mathbb{E}[I(U;V)]
+}{
+  \frac{1}{2}\bigl(H(U)+H(V)\bigr) - \mathbb{E}[I(U;V)]
+}.
+\]
+
+在该定义下：
+\begin{itemize}
+  \item 完全一致时，AMI 取 1；
+  \item 随机划分下，AMI 的期望值为 0；
+  \item 若比随机划分更差，则 AMI 可能为负。
+\end{itemize}
+
+由于 \(\mathbb{E}[I(U;V)]\) 的解析形式较复杂，通常通过已有库函数实现 AMI 的计算。
+
+\section{Homogeneity, Completeness 与 V-measure}
+
+这一组指标同样基于信息论，用于从“簇内纯度”和“类别完整性”两个角度描述聚类质量。相比 MI，它们的含义更接近日常语言，常用于结果解释。
+
+\subsection{条件熵的计算}
+
+在前述概率定义的基础上，有
+\[
+P(U=i|V=j) = \frac{p_{ij}}{q_j}, \qquad
+P(V=j|U=i) = \frac{p_{ij}}{p_i}.
+\]
+据此可定义条件熵：
+\[
+H(U|V) = -\sum_{j=1}^S q_j 
+         \sum_{i=1}^R P(U=i|V=j)\log P(U=i|V=j),
+\]
+\[
+H(V|U) = -\sum_{i=1}^R p_i
+         \sum_{j=1}^S P(V=j|U=i)\log P(V=j|U=i).
+\]
+
+直观上，\(H(U|V)\) 表示在已知聚类结果 \(V\) 的情况下，对真实类别 \(U\) 仍然存在多少不确定性；\(H(V|U)\) 则表示在已知真实类别 \(U\) 的情况下，对聚类结果 \(V\) 仍然存在多少不确定性。
+
+\subsection{Homogeneity（同质性）}
+
+同质性定义为
+\[
+h = 1 - \frac{H(U|V)}{H(U)}.
+\]
+
+\begin{itemize}
+  \item 若每个簇内部几乎只包含某一个真实类别，则在给定簇编号的条件下，真实类别基本可以确定，此时 \(H(U|V)\) 接近 0，\(h\) 接近 1；
+  \item 若聚类结果对真实类别几乎没有区分度，则知道簇编号几乎不能减少对真实类别的不确定性，此时 \(H(U|V) \approx H(U)\)，\(h\) 接近 0。
+\end{itemize}
+
+因此，Homogeneity 可以理解为“簇内是否纯”的度量。
+
+\subsection{Completeness（完整性）}
+
+完整性定义为
+\[
+c = 1 - \frac{H(V|U)}{H(V)}.
+\]
+
+\begin{itemize}
+  \item 若同一真实类别的样本基本都被分在同一簇中，则在给定真实类别的前提下，簇编号也基本可以确定，\(H(V|U)\) 较小，\(c\) 较大；
+  \item 若同一真实类别被拆分到多个簇中，则即使知道真实类别，也很难预测其所在簇，\(H(V|U)\) 较大，\(c\) 较小。
+\end{itemize}
+
+因此，Completeness 可以理解为“同一真实类别是否没有被拆散”的度量。
+
+\subsection{V-measure：综合考虑同质性与完整性}
+
+V-measure 将同质性和完整性综合起来，采用调和平均的形式（\(\beta=1\)）：
+\[
+V = \frac{2hc}{h+c}.
+\]
+
+V-measure 的性质包括：
+\begin{itemize}
+  \item \(V \in [0,1]\)；
+  \item 当且仅当 \(h=1\) 且 \(c=1\) 时，\(V=1\)，对应聚类结果与真实标签完全一致的情况；
+  \item 如果只在同质性或完整性方面表现良好，而另一项较差，则 \(V\) 的值不会过高，体现了二者之间的平衡。
+\end{itemize}
+
+\section{小结}
+
+综上，Rand 系列指标主要从“成对样本的一致性”角度评价聚类；互信息系列从“两个划分之间的信息共享”角度度量相关性；Homogeneity、Completeness 与 V-measure 则分别刻画“簇内纯度”“类别完整性”及二者的综合表现。在有真实标签的条件下，通过组合使用多种指标，可以从不同侧面分析聚类算法的优劣。
+
+\end{document}

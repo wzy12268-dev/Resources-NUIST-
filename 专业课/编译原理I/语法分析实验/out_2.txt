@@ -1,0 +1,87 @@
+/-------------------------没有消除左递归-----------------------------/
+规格显示：
+A->+TA|@
+B->*FB|@
+E->TA
+F->(E)|i
+T->FB
+
+FIRST集为：
+
+FIRST()   A       +       @
+FIRST()   B       *       @
+FIRST()   E       (       i
+FIRST()   F       (       i
+FIRST()   T       (       i
+
+FOLLOW集为：
+
+FOLLOW()  A       #       )
+FOLLOW()  B       #       )       +
+FOLLOW()  E       #       )
+FOLLOW()  F       #       )       *       +
+FOLLOW()  T       #       )       +
+
+显示table表：
+
+               #       (       )       *       +       i
+       A       @   error       @   error     +TA   error
+       B       @   error       @     *FB       @   error
+       E   error      TA   error   error   error      TA
+       F   error     (E)   error   error   error       i
+       T   error      FB   error   error   error      FB
+/--------------------------------------------------------------------/
+
+
+/-------------------------已经消除左递归-----------------------------/
+规格显示：
+
+A->+TA|@
+B->*FB|@
+E->TA
+F->(E)|i
+T->(E)B|iB
+FIRST集为：
+
+FIRST()   A       +       @
+FIRST()   B       *       @
+FIRST()   E       (       i
+FIRST()   F       (       i
+FIRST()   T       (       i
+
+FOLLOW集为：
+
+FOLLOW()  A       #       )
+FOLLOW()  B       #       )       +
+FOLLOW()  E       #       )
+FOLLOW()  F       #       )       *       +
+FOLLOW()  T       #       )       +
+
+显示table表：
+
+               #       (       )       *       +       i
+       A       @   error       @   error     +TA   error
+       B       @   error       @     *FB       @   error
+       E   error      TA   error   error   error      TA
+       F   error     (E)   error   error   error       i
+       T   error    (E)B   error   error   error      iB
+
+================= LL(1) 识别测试（用 i 表示标识符/数字） =================
+请输入要识别的符号串（仅包含 i,+,-,*,/,(,) ，例如 i+i-(i*i)/i ）
+输入 q 退出。
+
+Input> i+i+i
+结果：该串是当前文法的句子（ACCEPT）
+
+Input> (i-i(*i)
+结果：该串不是当前文法的句子（REJECT）
+
+Input> q
+/--------------------------------------------------------------------end/
+
+
+请按任意键继续. . .
+
+--------------------------------
+Process exited after 185.4 seconds with return value 0
+请按任意键继续. . .

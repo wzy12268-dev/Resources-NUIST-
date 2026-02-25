@@ -1,0 +1,515 @@
+ai.py:
+# selfplay.py
+# 在 baseline 项目根目录下运行这个脚本进行 AI vs AI 的自博弈（控制台/文本输出）
+# 用法： python selfplay.py [n_games] [iterations]
+# 例如： python selfplay.py 10 300
+
+import sys
+import time
+from board import Board, BLACK, WHITE
+from ai import MCTS_AI
+
+def play_one_game(iterations=300, verbose=False):
+    board = Board()
+    current = BLACK
+    ai_b = MCTS_AI(iterations=iterations)
+    ai_w = MCTS_AI(iterations=iterations)
+    history = []
+    while not board.is_terminal():
+        moves = board.legal_moves(current)
+        if not moves:
+            history.append((current, None))
+            current = board.opponent(current)
+            continue
+        if current == BLACK:
+            mv = ai_b.get_move(board, BLACK)
+        else:
+            mv = ai_w.get_move(board, WHITE)
+        if mv is None:
+            history.append((current, None))
+            current = board.opponent(current)
+            continue
+        board.make_move(mv, current)
+        history.append((current, mv))
+        current = board.opponent(current)
+        if verbose:
+            print(board.pretty())
+    scores = board.get_score()
+    winner = BLACK if scores[BLACK] > scores[WHITE] else (WHITE if scores[WHITE] > scores[BLACK] else 'draw')
+    return history, scores, winner
+
+def selfplay(n_games=10, iterations=300, out_file='selfplay_results.txt'):
+    with open(out_file, 'w', encoding='utf-8') as f:
+        for i in range(n_games):
+            print(f"自博弈 第{i+1}/{n_games} 局 开始 ...")
+            hist, scores, winner = play_one_game(iterations=iterations, verbose=False)
+            f.write(f"Game {i+1}\n")
+            for step, (player, action) in enumerate(hist[:60], start=1):
+                if action is None:
+                    f.write(f"{step}: {player} pass\n")
+                else:
+                    f.write(f"{step}: {player} {chr(ord('a')+action[1])}{action[0]+1}\n")
+            f.write(f"Final scores: {scores}\n")
+            f.write(f"Winner: {winner}\n")
+            f.write("="*40 + "\n")
+            print(f"第{i+1}局结束，比分：{scores}，胜者：{winner}")
+    print("所有自博弈结果已保存到", out_file)
+
+if __name__ == '__main__':
+    n = int(sys.argv[1]) if len(sys.argv)>=2 else 10
+    iters = int(sys.argv[2]) if len(sys.argv)>=3 else 300
+    selfplay(n_games=n, iterations=iters)
+
+board.py:
+from config import BOARD_SIZE, BLACK_TILE, WHITE_TILE, EMPTY_TILE
+
+class Board:
+    """Represents the Reversi game board and its logic."""
+    
+    def __init__(self):
+        """Initialize a new board."""
+        self.reset()
+    
+    def reset(self):
+        """Reset the board to the starting position."""
+        self.grid = [[EMPTY_TILE for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
+        
+        # Starting pieces
+        center = BOARD_SIZE // 2
+        self.grid[center-1][center-1] = BLACK_TILE
+        self.grid[center-1][center] = WHITE_TILE
+        self.grid[center][center-1] = WHITE_TILE
+        self.grid[center][center] = BLACK_TILE
+    
+    def get_copy(self):
+        """Return a deep copy of the current board."""
+        new_board = Board()
+        for x in range(BOARD_SIZE):
+            for y in range(BOARD_SIZE):
+                new_board.grid[x][y] = self.grid[x][y]
+        return new_board
+    
+    def is_on_board(self, x, y):
+        """Check if the coordinates are within the board boundaries."""
+        return 0 <= x < BOARD_SIZE and 0 <= y < BOARD_SIZE
+    
+    def is_corner(self, x, y):
+        """Check if the coordinates represent a corner position."""
+        corners = [(0, 0), (0, BOARD_SIZE-1), (BOARD_SIZE-1, 0), (BOARD_SIZE-1, BOARD_SIZE-1)]
+        return (x, y) in corners
+    
+    def get_valid_moves(self, color):
+        """Get all valid moves for the given color."""
+        valid_moves = []
+        for x in range(BOARD_SIZE):
+            for y in range(BOARD_SIZE):
+                if self.is_valid_move(color, x, y):
+                    valid_moves.append((x, y))
+        return valid_moves
+    
+    def is_valid_move(self, color, x, y):
+        """Check if placing a piece at (x, y) is a valid move for the given color."""
+        if not self.is_on_board(x, y) or self.grid[x][y] != EMPTY_TILE:
+            return False
+            
+        # Temporarily place the piece
+        self.grid[x][y] = color
+        
+        # Determine opponent's color
+        opponent = WHITE_TILE if color == BLACK_TILE else BLACK_TILE
+        
+        # Check in all 8 directions
+        flippable_pieces = []
+        for dx, dy in [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]:
+            temp_flips = []
+            curr_x, curr_y = x + dx, y + dy
+            
+            # Continue in this direction as long as we find opponent's pieces
+            while (self.is_on_board(curr_x, curr_y) and 
+                   self.grid[curr_x][curr_y] == opponent):
+                temp_flips.append((curr_x, curr_y))
+                curr_x += dx
+                curr_y += dy
+            
+            # If we found our own piece at the end, these pieces can be flipped
+            if (self.is_on_board(curr_x, curr_y) and 
+                self.grid[curr_x][curr_y] == color):
+                flippable_pieces.extend(temp_flips)
+        
+        # Restore the empty space
+        self.grid[x][y] = EMPTY_TILE
+        
+        # Valid move if any pieces would be flipped
+        return flippable_pieces if flippable_pieces else False
+    
+    def make_move(self, color, x, y):
+        """Make a move at the given position if valid."""
+        flippable_pieces = self.is_valid_move(color, x, y)
+        
+        if not flippable_pieces:
+            return False
+            
+        # Place the piece and flip opponent's pieces
+        self.grid[x][y] = color
+        for flip_x, flip_y in flippable_pieces:
+            self.grid[flip_x][flip_y] = color
+            
+        return True
+    
+    def get_score(self):
+        """Get the current score (count of pieces for each player)."""
+        black_count = 0
+        white_count = 0
+        
+        for x in range(BOARD_SIZE):
+            for y in range(BOARD_SIZE):
+                if self.grid[x][y] == BLACK_TILE:
+                    black_count += 1
+                elif self.grid[x][y] == WHITE_TILE:
+                    white_count += 1
+                    
+        return {BLACK_TILE: black_count, WHITE_TILE: white_count}
+    
+    def is_game_over(self):
+        """Check if the game is over."""
+        # Game ends if board is full
+        for x in range(BOARD_SIZE):
+            for y in range(BOARD_SIZE):
+                if self.grid[x][y] == EMPTY_TILE:
+                    # Still have empty cells, check if any player can move
+                    if (self.get_valid_moves(BLACK_TILE) or 
+                        self.get_valid_moves(WHITE_TILE)):
+                        return False
+                    else:
+                        return True  # No valid moves for either player
+        
+        # Board is full
+        return True
+
+config.py:
+# Game constants and configuration
+
+# Board dimensions
+BOARD_SIZE = 8
+
+# AI difficulty (number of MCTS iterations)
+DIFFICULTY = 500
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+YELLOW = (255, 255, 0)
+GRAY = (80, 80, 80)
+BLUE = (0, 0, 255)
+LIGHT_BLUE = (173, 216, 230)
+
+# Tiles
+BLACK_TILE = 'b'
+WHITE_TILE = 'w'
+EMPTY_TILE = ' '
+
+# Screen dimensions
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 800
+CELL_SIZE = 100
+PIECE_RADIUS = 30
+HINT_RADIUS = 20
+
+# Game clock
+TICK_RATE = 40
+
+# Progress bar settings
+PROGRESS_BAR_WIDTH = 200
+PROGRESS_BAR_HEIGHT = 20
+PROGRESS_BAR_X = 800
+PROGRESS_BAR_Y = 350
+
+# Asset paths
+BACKGROUND_PATH = 'assets/bg.png'
+
+gui.py:
+import pygame
+from config import *
+class GameGUI:
+    """Handles the graphical user interface for the Reversi game."""
+    
+    def __init__(self):
+        """Initialize the GUI."""
+        pygame.init()
+        
+        # Setup display
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.display.set_caption('MCTS Reversi')
+        
+        # Load assets
+        self.background = pygame.image.load(BACKGROUND_PATH)
+        self.font = pygame.font.SysFont(None, 48)
+        self.small_font = pygame.font.SysFont(None, 24)
+        
+        # Setup clock
+        self.clock = pygame.time.Clock()
+        
+        # AI thinking progress
+        self.ai_progress = 0.0
+        self.ai_thinking = False
+    
+    def draw_board(self, board, player_tile, valid_moves=None):
+        """Draw the game board with pieces and valid moves."""
+        # Draw board background
+        self.screen.fill(GRAY)
+        self.screen.blit(self.background, (0, 0))
+        
+        # Draw pieces
+        for x in range(len(board.grid)):
+            for y in range(len(board.grid[x])):
+                # Draw black pieces
+                if board.grid[x][y] == BLACK_TILE:
+                    pygame.draw.circle(
+                        self.screen, 
+                        BLACK, 
+                        [CELL_SIZE // 2 + CELL_SIZE * x, CELL_SIZE // 2 + CELL_SIZE * y], 
+                        PIECE_RADIUS, 
+                        PIECE_RADIUS
+                    )
+                # Draw white pieces
+                elif board.grid[x][y] == WHITE_TILE:
+                    pygame.draw.circle(
+                        self.screen, 
+                        WHITE, 
+                        [CELL_SIZE // 2 + CELL_SIZE * x, CELL_SIZE // 2 + CELL_SIZE * y], 
+                        PIECE_RADIUS, 
+                        PIECE_RADIUS
+                    )
+                # Draw valid move hints
+                elif valid_moves and (x, y) in valid_moves:
+                    pygame.draw.circle(
+                        self.screen, 
+                        GREEN, 
+                        [CELL_SIZE // 2 + CELL_SIZE * x, CELL_SIZE // 2 + CELL_SIZE * y], 
+                        HINT_RADIUS, 
+                        HINT_RADIUS
+                    )
+    
+    def draw_player_indicators(self, player_tile, computer_tile):
+        """Draw indicators showing which color belongs to which player."""
+        # Draw player label
+        player_text = self.font.render("you", True, YELLOW)
+        self.screen.blit(player_text, (870, 730))
+        
+        # Draw AI label
+        ai_text = self.font.render("AI", True, YELLOW)
+        self.screen.blit(ai_text, (880, 130))
+        
+        # Draw player color indicator
+        player_color = BLACK if player_tile == BLACK_TILE else WHITE
+        pygame.draw.circle(self.screen, player_color, [900, 700], HINT_RADIUS, HINT_RADIUS)
+        
+        # Draw AI color indicator
+        ai_color = BLACK if computer_tile == BLACK_TILE else WHITE
+        pygame.draw.circle(self.screen, ai_color, [900, 100], HINT_RADIUS, HINT_RADIUS)
+    
+    
+    
+    def draw_progress_bar(self):
+        """Draw the AI thinking progress bar."""
+        if self.ai_thinking:
+            # Draw progress bar background
+            pygame.draw.rect(
+                self.screen, 
+                LIGHT_BLUE, 
+                [PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BAR_WIDTH, PROGRESS_BAR_HEIGHT], 
+                border_radius=5
+            )
+            
+            # Draw progress bar fill
+            fill_width = int(PROGRESS_BAR_WIDTH * self.ai_progress)
+            if fill_width > 0:
+                pygame.draw.rect(
+                    self.screen, 
+                    BLUE, 
+                    [PROGRESS_BAR_X, PROGRESS_BAR_Y, fill_width, PROGRESS_BAR_HEIGHT], 
+                    border_radius=5
+                )
+            
+            # Draw "AI Thinking" text
+            thinking_text = self.small_font.render("AI Thinking...", True, BLACK)
+            self.screen.blit(thinking_text, (PROGRESS_BAR_X + 60, PROGRESS_BAR_Y - 25))
+    
+    def update_ai_progress(self, progress):
+        """Update the AI thinking progress."""
+        self.ai_progress = progress
+    
+    def set_ai_thinking(self, is_thinking):
+        """Set whether AI is currently thinking."""
+        self.ai_thinking = is_thinking
+        if not is_thinking:
+            self.ai_progress = 0.0
+    
+    def draw_game_over(self, player_score, computer_score):
+        """Draw the game over message with final score."""
+        if player_score > computer_score:
+            result = "Win"
+        elif player_score == computer_score:
+            result = "Draw"
+        else:
+            result = "Lose"
+            
+        output_text = f"{result}. {player_score}:{computer_score}"
+        text_surface = self.font.render(output_text, True, BLACK, YELLOW)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.screen.blit(text_surface, text_rect)
+    
+    def update_display(self):
+        """Update the display."""
+        pygame.display.update()
+        self.clock.tick(TICK_RATE)
+    
+    def get_clicked_cell(self):
+        """Get the board cell coordinates from a mouse click."""
+        x, y = pygame.mouse.get_pos()
+        col = x // CELL_SIZE
+        row = y // CELL_SIZE
+        return col, row
+    
+    def quit(self):
+        """Clean up and quit pygame."""
+        pygame.quit()
+
+main.py:
+import pygame
+import sys
+import random
+import threading
+from pygame.locals import *
+
+from config import BLACK_TILE, WHITE_TILE, DIFFICULTY
+from board import Board
+from ai import MCTSAI
+from gui import GameGUI
+
+def who_goes_first():
+    """Randomly determine who goes first."""
+    if random.randint(0, 1) == 0:
+        print("AI goes first")
+        return 1
+    else:
+        print("Player goes first")
+        return 0
+
+def ai_move_thread(ai, board, computer_tile, gui, result_queue):
+    """在单独的线程中运行AI思考过程"""
+    move = ai.get_best_move(board, lambda progress: gui.update_ai_progress(progress))
+    result_queue.append(move)
+
+def main():
+    """Main game function."""
+    # Initialize game components
+    board = Board()
+    gui = GameGUI()
+    
+    # Determine who goes first
+    turn = who_goes_first()
+    
+    # Assign colors
+    if turn == 0:  # Player goes first
+        player_tile = BLACK_TILE
+        computer_tile = WHITE_TILE
+    else:  # AI goes first
+        player_tile = WHITE_TILE
+        computer_tile = BLACK_TILE
+    
+    # Initialize AI
+    ai = MCTSAI(difficulty=DIFFICULTY, player_color=player_tile)
+    
+    # Game state variables
+    game_over = False
+    
+    # AI thinking thread variables
+    ai_thinking = False
+    ai_move_result = []
+    ai_thread = None
+    
+    # Game loop
+    while True:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                if ai_thread and ai_thread.is_alive():
+                    # 等待AI线程完成，避免退出时的异常
+                    ai_thread.join(timeout=0.5)
+                gui.quit()
+                sys.exit()
+                
+            # Handle player move
+            if (not game_over and 
+                turn == 0 and 
+                event.type == MOUSEBUTTONDOWN and 
+                event.button == 1):
+                
+                # Get clicked cell
+                col, row = gui.get_clicked_cell()
+                
+                # Make move if valid
+                if board.make_move(player_tile, col, row):
+                    # Check if AI can move next
+                    if board.get_valid_moves(computer_tile):
+                        turn = 1  # AI's turn
+                    elif not board.get_valid_moves(player_tile):
+                        game_over = True  # No moves available for either player
+            
+            # Debug key to force AI move
+            if event.type == KEYUP and event.key == K_q:
+                turn = 1
+        
+        # Handle AI move
+        if not game_over and turn == 1:
+            if not ai_thinking:
+                # Start AI thinking in a separate thread
+                ai_thinking = True
+                gui.set_ai_thinking(True)
+                ai_move_result.clear()
+                ai_thread = threading.Thread(
+                    target=ai_move_thread,
+                    args=(ai, board, computer_tile, gui, ai_move_result)
+                )
+                ai_thread.daemon = True  # 设置为守护线程，这样当主程序退出时，线程也会退出
+                ai_thread.start()
+            
+            elif ai_move_result:  # AI has finished thinking
+                move = ai_move_result[0]
+                ai_thinking = False
+                gui.set_ai_thinking(False)
+                
+                if move:
+                    x, y = move
+                    board.make_move(computer_tile, x, y)
+                
+                # Check if player can move next
+                if board.get_valid_moves(player_tile):
+                    turn = 0  # Player's turn
+                elif not board.get_valid_moves(computer_tile):
+                    game_over = True  # No moves available for either player
+        
+        # Get current valid moves for the player
+        valid_moves = board.get_valid_moves(player_tile) if turn == 0 else []
+        
+        # Draw game state
+        gui.draw_board(board, player_tile, valid_moves)
+        gui.draw_player_indicators(player_tile, computer_tile)
+        gui.draw_progress_bar()
+        gui.draw_progress_bar()  # 绘制AI思考进度条
+        
+        # Handle game over state
+        if game_over:
+            scores = board.get_score()
+            player_score = scores[player_tile]
+            computer_score = scores[computer_tile]
+            gui.draw_game_over(player_score, computer_score)
+        
+        # Update display
+        gui.update_display()
+
+if __name__ == '__main__':
+    main()
